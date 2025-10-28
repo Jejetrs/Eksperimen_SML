@@ -71,12 +71,12 @@ jobs:
     
     - name: Verify Preprocessed Data
       run: |
-        if [ ! -f "preprocessing/diabetes_preprocessed.csv" ]; then
+        if [ ! -f "preprocessing/diabetes_preprocessing.csv" ]; then
           echo "Error: Preprocessed data not generated!"
           exit 1
         fi
         echo "✓ Preprocessed data generated successfully"
-        wc -l preprocessing/diabetes_preprocessed.csv
+        wc -l preprocessing/diabetes_preprocessing.csv
         
         if [ ! -f "preprocessing/scaler.pkl" ]; then
           echo "Error: Scaler not generated!"
@@ -90,9 +90,9 @@ jobs:
         echo "=== Preprocessing Completed ==="
         echo "Date: $(date)"
         echo "Raw data: $(wc -l < diabetes_raw.csv) lines"
-        echo "Preprocessed data: $(wc -l < preprocessing/diabetes_preprocessed.csv) lines"
+        echo "Preprocessed data: $(wc -l < preprocessing/diabetes_preprocessing.csv) lines"
         echo "Files generated:"
-        ls -lh preprocessing/diabetes_preprocessed.csv
+        ls -lh preprocessing/diabetes_preprocessing.csv
         ls -lh preprocessing/scaler.pkl
     
     - name: Upload Preprocessed Data as Artifact
@@ -100,18 +100,18 @@ jobs:
       with:
         name: preprocessed-data-${{ github.sha }}
         path: |
-          preprocessing/diabetes_preprocessed.csv
+          preprocessing/diabetes_preprocessing.csv
           preprocessing/scaler.pkl
         retention-days: 30
     
-    - name: Commit and Push Preprocessed Data
+    - name: Commit and Push Preprocessing Data
       if: github.event_name != 'pull_request'
       run: |
         git config --local user.email "github-actions[bot]@users.noreply.github.com"
         git config --local user.name "github-actions[bot]"
         
         # Add preprocessed files
-        git add preprocessing/diabetes_preprocessed.csv preprocessing/scaler.pkl
+        git add preprocessing/diabetes_preprocessing.csv preprocessing/scaler.pkl
         
         # Check if there are changes to commit
         if git diff --staged --quiet; then
@@ -143,7 +143,7 @@ jobs:
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "### 📊 Data Information" >> $GITHUB_STEP_SUMMARY
         echo "- **Raw Data Rows:** $(wc -l < diabetes_raw.csv)" >> $GITHUB_STEP_SUMMARY
-        echo "- **Preprocessed Data Rows:** $(wc -l < preprocessing/diabetes_preprocessed.csv)" >> $GITHUB_STEP_SUMMARY
+        echo "- **Preprocessed Data Rows:** $(wc -l < preprocessing/diabetes_preprocessing.csv)" >> $GITHUB_STEP_SUMMARY
         echo "- **Timestamp:** $(date)" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "### ✅ Steps Completed" >> $GITHUB_STEP_SUMMARY
@@ -156,7 +156,7 @@ jobs:
         echo "- [x] Generate artifacts" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "### 📦 Files Generated" >> $GITHUB_STEP_SUMMARY
-        echo "- ✅ **preprocessing/diabetes_preprocessed.csv** (committed to repo)" >> $GITHUB_STEP_SUMMARY
+        echo "- ✅ **preprocessing/diabetes_preprocessing.csv** (committed to repo)" >> $GITHUB_STEP_SUMMARY
         echo "- ✅ **preprocessing/scaler.pkl** (committed to repo)" >> $GITHUB_STEP_SUMMARY
         echo "- ✅ **Artifacts** (available for download for 30 days)" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
